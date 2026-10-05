@@ -22,9 +22,7 @@ const supabaseClient =
 let timerInterval = null;
 let timeRemaining = 25 * 60;
 let isRunning = false;
-
 let focusDuration = 25;
-
 
 const timerElement =
     document.getElementById("timer");
@@ -54,7 +52,6 @@ const focusDurationInput =
 
 let currentUser = null;
 let profile = null;
-
 
 const loginOpenButton =
     document.getElementById("login-open-button");
@@ -243,8 +240,8 @@ function updateTimerDisplay() {
 
     document.title =
         isRunning
-            ? `${timerElement.textContent} • FocusForge`
-            : "FocusForge";
+            ? `${timerElement.textContent} • FocusCore`
+            : "FocusCore";
 }
 
 
@@ -591,7 +588,7 @@ function addTask() {
 function saveTasks() {
 
     localStorage.setItem(
-        "focusforge_tasks",
+        "focuscore_tasks",
         JSON.stringify(tasks)
     );
 
@@ -602,7 +599,7 @@ function loadTasks() {
 
     const saved =
         localStorage.getItem(
-            "focusforge_tasks"
+            "focuscore_tasks"
         );
 
     if (!saved) return;
@@ -704,6 +701,24 @@ function playSound() {
 
     currentAudio.volume = 0.35;
 
+    currentAudio.addEventListener(
+        "error",
+        () => {
+
+            currentAudio = null;
+
+            soundToggle.textContent =
+                "▶ Play";
+
+            showNotification(
+                `Couldn't load ${sound.name}. Check that ${sound.file} is deployed.`
+            );
+
+        },
+        { once: true }
+    );
+
+
     currentAudio
         .play()
         .then(() => {
@@ -714,8 +729,13 @@ function playSound() {
         })
         .catch(() => {
 
+            currentAudio = null;
+
+            soundToggle.textContent =
+                "▶ Play";
+
             showNotification(
-                "Couldn't play this sound."
+                `Couldn't play ${sound.name}.`
             );
 
         });
@@ -730,10 +750,21 @@ soundToggle.addEventListener(
 
             if (currentAudio.paused) {
 
-                currentAudio.play();
+                currentAudio
+                    .play()
+                    .then(() => {
 
-                soundToggle.textContent =
-                    "⏸ Pause";
+                        soundToggle.textContent =
+                            "⏸ Pause";
+
+                    })
+                    .catch(() => {
+
+                        showNotification(
+                            "Couldn't resume this sound."
+                        );
+
+                    });
 
             } else {
 
@@ -1035,7 +1066,7 @@ function openAuth() {
         "Your Account";
 
     accountMessage.textContent =
-        "Your FocusForge progress is saved to your account.";
+        "Your FocusCore progress is saved to your account.";
 
     loggedInEmail.textContent =
         currentUser.email;
@@ -1267,7 +1298,7 @@ loginButton.addEventListener(
         if (!email || !password) {
 
             showNotification(
-                "Enter your email and password."
+                "Enter an email and password."
             );
 
             return;
