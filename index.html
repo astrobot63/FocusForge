@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FocusForge</title>
+
+    <link rel="stylesheet" href="styles.css">
+    <link
+    rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍅</text></svg>"
+    >
+</head>
+
+<body>
+
+    <header class="topbar">
+
+        <div class="logo">
+            <span class="logo-icon">🍅</span>
+            <span>FocusForge</span>
+        </div>
+
+        <div class="stats">
+
+            <div class="stat">
+                <span>🔥</span>
+                <strong id="streak">0</strong>
+                <small>Streak</small>
+            </div>
+
+            <div class="stat">
+                <span>⭐</span>
+                <strong id="xp">0</strong>
+                <small>XP</small>
+            </div>
+
+            <div class="stat">
+                <span>🏆</span>
+                <strong id="level">1</strong>
+                <small>Level</small>
+            </div>
+
+        </div>
+
+        <button id="login-open-button" class="secondary-button">
+            Log In
+        </button>
+
+    </header>
+
+
+    <main>
+
+        <section class="timer-card">
+
+            <div class="duration-selector">
+
+                <button id="decrease-time" type="button">
+                    −
+                </button>
+
+                <input
+                    id="focus-duration"
+                    type="number"
+                    min="1"
+                    max="1440"
+                    value="25"
+                    aria-label="Focus duration in minutes"
+                >
+
+                <button id="increase-time" type="button">
+                    +
+                </button>
+
+            </div>
+
+
+            <div class="timer-container">
+
+                <div class="timer-ring">
+
+                    <div class="timer-content">
+
+                        <div id="timer">
+                            25:00
+                        </div>
+
+                        <p id="timer-label">
+                            Ready to focus?
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="timer-controls">
+
+                <button
+                    id="start-button"
+                    class="primary-button"
+                >
+                    ▶ Start
+                </button>
+
+                <button
+                    id="reset-button"
+                    class="secondary-button"
+                >
+                    ↻ Reset
+                </button>
+
+            </div>
+
+
+            <div class="session-info">
+                <span>Sessions completed:</span>
+                <strong id="sessions">0</strong>
+            </div>
+
+        </section>
+
+
+        <section class="panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <h2>Tasks</h2>
+                    <p>What are you working on?</p>
+                </div>
+
+                <span
+                    class="task-count"
+                    id="task-count"
+                >
+                    0 / 0
+                </span>
+
+            </div>
+
+
+            <div class="task-input">
+
+                <input
+                    id="task-input"
+                    type="text"
+                    placeholder="Add a task..."
+                    maxlength="80"
+                >
+
+                <button id="add-task">
+                    +
+                </button>
+
+            </div>
+
+
+            <div
+                id="task-list"
+                class="task-list"
+            ></div>
+
+        </section>
+
+
+        <section class="panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <h2>Focus Sounds 🎧</h2>
+                    <p>Pick a sound for your session</p>
+                </div>
+
+            </div>
+
+
+            <div class="sound-carousel">
+
+                <button
+                    id="previous-sound"
+                    class="carousel-button"
+                    type="button"
+                >
+                    ‹
+                </button>
+
+
+                <div class="sound-card">
+
+                    <div
+                        id="sound-emoji"
+                        class="sound-emoji"
+                    >
+                        🌧️
+                    </div>
+
+                    <h3 id="sound-name">
+                        Rain
+                    </h3>
+
+                    <button
+                        id="sound-toggle"
+                        class="sound-button"
+                        type="button"
+                    >
+                        ▶ Play
+                    </button>
+
+                </div>
+
+
+                <button
+                    id="next-sound"
+                    class="carousel-button"
+                    type="button"
+                >
+                    ›
+                </button>
+
+            </div>
+
+
+            <div
+                class="sound-dots"
+                id="sound-dots"
+            ></div>
+
+        </section>
+
+
+        <section class="panel xp-panel">
+
+            <div class="xp-header">
+
+                <div>
+                    <h2>Progress</h2>
+
+                    <p id="level-text">
+                        Level 1
+                    </p>
+                </div>
+
+                <strong id="xp-progress-text">
+                    0 / 100 XP
+                </strong>
+
+            </div>
+
+
+            <div class="xp-bar">
+
+                <div
+                    id="xp-progress"
+                    class="xp-fill"
+                ></div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <div
+        id="notification"
+        class="notification"
+    ></div>
+
+
+    <!-- RESET MODAL -->
+
+    <div
+        id="reset-modal"
+        class="reset-modal"
+    >
+
+        <div class="reset-modal-card">
+
+            <p>
+                The activity you are doing requires a reset timer. Reset?
+            </p>
+
+            <div class="reset-modal-buttons">
+
+                <button
+                    id="cancel-reset"
+                    class="secondary-button"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    id="confirm-reset"
+                    class="primary-button"
+                >
+                    Reset
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- AUTH MODAL -->
+
+    <div
+        id="account-modal"
+        class="auth-modal"
+    >
+
+        <div class="auth-card">
+
+            <button
+                id="close-account"
+                class="auth-close"
+                type="button"
+            >
+                ×
+            </button>
+
+
+            <div class="auth-heading">
+
+                <div class="auth-icon">
+                    🍅
+                </div>
+
+                <h2 id="account-title">
+                    Log In
+                </h2>
+
+                <p id="account-message">
+                    Log in to save your progress and earn XP.
+                </p>
+
+            </div>
+
+
+            <!-- LOGIN / SIGNUP FORM -->
+
+            <div id="auth-form">
+
+                <input
+                    id="auth-email"
+                    type="email"
+                    placeholder="Email"
+                    autocomplete="email"
+                >
+
+                <input
+                    id="auth-password"
+                    type="password"
+                    placeholder="Password"
+                    autocomplete="current-password"
+                >
+
+
+                <button
+                    id="login-button"
+                    class="primary-button"
+                    type="button"
+                >
+                    Log In
+                </button>
+
+                <button
+                    id="signup-button"
+                    class="primary-button"
+                    type="button"
+                    style="display: none;"
+                >
+                    Sign Up
+                </button>
+
+            </div>
+
+
+            <!-- SWITCH LOGIN / SIGNUP -->
+
+            <div
+                id="auth-switch"
+                class="auth-switch"
+            >
+
+                <span id="auth-switch-text">
+                    Don't have an account?
+                </span>
+
+                <button
+                    id="auth-switch-button"
+                    type="button"
+                >
+                    Sign Up
+                </button>
+
+            </div>
+
+
+            <!-- LOGGED IN -->
+
+            <div
+                id="logged-in-area"
+                style="display: none;"
+            >
+
+                <p>
+                    Logged in as
+                </p>
+
+                <strong id="logged-in-email"></strong>
+
+                <button
+                    id="logout-button"
+                    class="secondary-button"
+                    type="button"
+                >
+                    Log Out
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
