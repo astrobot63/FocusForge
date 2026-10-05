@@ -160,27 +160,27 @@ const sounds = [
     {
         name: "Rain",
         emoji: "🌧️",
-        file: "sounds/rain.mp3"
+        file: "rain.mp3"
     },
     {
         name: "Forest",
         emoji: "🌲",
-        file: "sounds/forest.mp3"
+        file: "forest.mp3"
     },
     {
         name: "Ocean",
         emoji: "🌊",
-        file: "sounds/ocean.mp3"
+        file: "ocean.mp3"
     },
     {
         name: "White Noise",
         emoji: "📻",
-        file: "sounds/white-noise.mp3"
+        file: "white-noise.mp3"
     },
     {
         name: "Deep Focus",
         emoji: "🧠",
-        file: "sounds/deep-focus.mp3"
+        file: "deep-focus.mp3"
     }
 ];
 
