@@ -577,18 +577,81 @@ function renderTasks() {
 
 
         checkbox.addEventListener(
-            "click",
-            () => {
+    "click",
+    async () => {
 
-                task.completed =
-                    !task.completed;
+        const wasCompleted =
+            task.completed;
 
-                saveTasks();
+        task.completed =
+            !task.completed;
 
-                renderTasks();
+        saveTasks();
+
+        renderTasks();
+
+
+        // Award 10 XP only when completing a task
+        if (!wasCompleted && task.completed) {
+
+            if (
+                currentUser &&
+                currentUser.email_confirmed_at
+            ) {
+
+                if (!profile) {
+                    profile =
+                        await ensureProfile(currentUser);
+                }
+
+                if (profile) {
+
+                    profile.xp =
+                        (profile.xp || 0) + 10;
+
+                    const {
+                        error
+                    } = await supabaseClient
+                        .from("profiles")
+                        .update({
+                            xp: profile.xp
+                        })
+                        .eq("id", currentUser.id);
+
+                    if (error) {
+
+                        console.error(
+                            "Could not save task XP:",
+                            error
+                        );
+
+                        showNotification(
+                            "Task completed, but XP couldn't be saved."
+                        );
+
+                        return;
+                    }
+
+                    updateStatsUI();
+
+                    showNotification(
+                        "+10 XP ⭐"
+                    );
+
+                }
+
+            } else {
+
+                showNotification(
+                    "Task complete! Log in and verify your email to earn XP."
+                );
 
             }
-        );
+
+        }
+
+    }
+);
 
 
         const text =
@@ -1562,11 +1625,14 @@ async function completeSession() {
     }
 
 
-    profile.xp += 25;
+    profile.xp =
+    (profile.xp || 0) + 25;
 
-    profile.sessions += 1;
+profile.sessions =
+    (profile.sessions || 0) + 1;
 
-    profile.streak += 1;
+profile.streak =
+    (profile.streak || 0) + 1;
 
 
     const {
