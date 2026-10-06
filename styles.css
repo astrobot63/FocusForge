@@ -594,7 +594,7 @@ main {
         opacity 0.25s ease,
         transform 0.25s ease;
 
-    z-index: 100;
+    z-index: 200;
 }
 
 .notification.show {
