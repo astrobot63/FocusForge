@@ -316,6 +316,74 @@ startButton.addEventListener(
     }
 );
 
+function showResetConfirmation(action) {
+
+    if (!isRunning) {
+        action();
+        return;
+    }
+
+    const modal =
+        document.getElementById("reset-modal");
+
+    const confirmButton =
+        document.getElementById("confirm-reset");
+
+    const cancelButton =
+        document.getElementById("cancel-reset");
+
+    modal.classList.add("show");
+
+    confirmButton.onclick = () => {
+
+        modal.classList.remove("show");
+
+        resetTimer();
+
+        action();
+    };
+
+    cancelButton.onclick = () => {
+
+        modal.classList.remove("show");
+
+    };
+}
+
+function requireTimerReset(action) {
+
+    if (!isRunning) {
+        action();
+        return;
+    }
+
+    const modal =
+        document.getElementById("reset-modal");
+
+    const confirmButton =
+        document.getElementById("confirm-reset");
+
+    const cancelButton =
+        document.getElementById("cancel-reset");
+
+    modal.classList.add("show");
+
+    confirmButton.onclick = () => {
+
+        modal.classList.remove("show");
+
+        resetTimer();
+
+        action();
+    };
+
+    cancelButton.onclick = () => {
+
+        modal.classList.remove("show");
+
+    };
+}
+
 
 // ============================================
 // RESET
@@ -349,16 +417,10 @@ resetButton.addEventListener(
     "click",
     () => {
 
-        if (isRunning) {
-
-            document
-                .getElementById("reset-modal")
-                .classList.add("show");
-
-            return;
-        }
-
-        resetTimer();
+        requireTimerReset(() => {
+            // Nothing else to do.
+            // The timer has already been reset.
+        });
 
     }
 );
@@ -432,13 +494,17 @@ decreaseTimeButton.addEventListener(
     "click",
     () => {
 
-        focusDurationInput.value =
-            Math.max(
-                1,
-                Number(focusDurationInput.value) - 1
-            );
+        requireTimerReset(() => {
 
-        updateDuration();
+            focusDurationInput.value =
+                Math.max(
+                    1,
+                    Number(focusDurationInput.value) - 1
+                );
+
+            updateDuration();
+
+        });
 
     }
 );
@@ -448,13 +514,17 @@ increaseTimeButton.addEventListener(
     "click",
     () => {
 
-        focusDurationInput.value =
-            Math.min(
-                1440,
-                Number(focusDurationInput.value) + 1
-            );
+        requireTimerReset(() => {
 
-        updateDuration();
+            focusDurationInput.value =
+                Math.min(
+                    1440,
+                    Number(focusDurationInput.value) + 1
+                );
+
+            updateDuration();
+
+        });
 
     }
 );
@@ -1075,7 +1145,13 @@ function openAuth() {
 
 loginOpenButton.addEventListener(
     "click",
-    openAuth
+    () => {
+
+        requireTimerReset(() => {
+            openAuth();
+        });
+
+    }
 );
 
 
@@ -1093,11 +1169,15 @@ authSwitchButton.addEventListener(
     "click",
     () => {
 
-        if (authMode === "login") {
-            setAuthMode("signup");
-        } else {
-            setAuthMode("login");
-        }
+        requireTimerReset(() => {
+
+            if (authMode === "login") {
+                setAuthMode("signup");
+            } else {
+                setAuthMode("login");
+            }
+
+        });
 
     }
 );
@@ -1248,33 +1328,58 @@ signupButton.addEventListener(
 
         if (error) {
 
+    if (
+        error.message.toLowerCase().includes("already") ||
+        error.message.toLowerCase().includes("registered")
+    ) {
+
+        showNotification(
+            "This email may already have an account. Try logging in."
+        );
+
+    } else {
+
             showNotification(
                 error.message
             );
 
-            return;
         }
 
+        return;
+    }
 
-        if (data.session) {
 
-            showNotification(
-                "Account created! 🎉"
-            );
+        if (data.user && data.user.identities?.length === 0) {
 
-            accountModal.classList.remove(
-                "show"
-            );
+    accountMessage.textContent =
+        "This email may already have an account. Try logging in instead.";
 
-        } else {
+    showNotification(
+        "This email may already have an account."
+    );
 
-            accountMessage.textContent =
-                "Account created! Check your email and click the verification link.";
+    return;
+}
 
-            showNotification(
-                "Check your email to verify your account."
-            );
-        }
+if (data.session) {
+
+    showNotification(
+        "Account created! 🎉"
+    );
+
+    accountModal.classList.remove(
+        "show"
+    );
+
+} else {
+
+    accountMessage.textContent =
+        "Account created! Check your email and click the verification link.";
+
+    showNotification(
+        "Check your email to verify your account."
+    );
+}
 
     }
 );
